@@ -33,7 +33,7 @@ export class SchedulingBusiness {
         throw new CustomError(400, 'Há entradas fora do padrão.')
       }
 
-      const [serviceConsultant] = await this.dbServicoConsultor.selectGeneric(
+      const [serviceConsultant] = await this.dbServiceConsultor.selectGeneric(
         '*', {id_servico: dto.idServico, id_consultor: dto.idConsultor}
       )
       if(!serviceConsultant){
