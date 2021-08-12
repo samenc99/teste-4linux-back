@@ -13,12 +13,12 @@ type SchedulingMock = {
 
 export class SchedulingBusiness {
   private database : any
-  private dbServiceConsultor : any
+  private dbServiceConsultant : any
   private holiday : any
 
   constructor(mock?:SchedulingMock) {
     this.database = mock?.database || new Database('agendamento')
-    this.dbServiceConsultor = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
+    this.dbServiceConsultant = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
     this.holiday = mock?.holiday || this.verifyHoliday
   }
 
@@ -33,7 +33,7 @@ export class SchedulingBusiness {
         throw new CustomError(400, 'Há entradas fora do padrão.')
       }
 
-      const [serviceConsultant] = await this.dbServiceConsultor.selectGeneric(
+      const [serviceConsultant] = await this.dbServiceConsultant.selectGeneric(
         '*', {id_servico: dto.idServico, id_consultor: dto.idConsultor}
       )
       if(!serviceConsultant){
