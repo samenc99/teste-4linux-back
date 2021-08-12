@@ -1,4 +1,4 @@
-export default function validateEmail (email:string): boolean{
+export default function (email:string): boolean{
   if(!email ||
     email==='' ||
     email.indexOf('@')===-1 ||
