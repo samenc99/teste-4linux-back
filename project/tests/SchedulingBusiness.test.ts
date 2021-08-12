@@ -2,7 +2,7 @@ import {DatabaseMock} from "./mocks/DatabaseMock";
 import {ServiceConsultantMock} from "./mocks/ServiceConsultantMock";
 import {verifyHolidayMock} from "./mocks/verifyHolidayMock";
 import {SchedulingBusiness} from "../src/business/SchedulingBusiness";
-import {SchedulingDTO} from "../src/model/Scheduling";
+import {QueryDTO, SchedulingDTO} from "../src/model/Scheduling";
 
 describe('Scheduling Business', ()=>{
   const database = new DatabaseMock()
@@ -157,16 +157,79 @@ describe('Scheduling Business', ()=>{
 
     describe('Sucessfull', ()=>{
       test('Sucessfull', async()=>{
-        expect.assertions(0)
-        try {
-          await scheduling.toSchedule(
-            {...schedulingDTO, data: '2021-08-14'}
-          )
-        }catch (err){
-          expect(err).toBe('')
-        }
+        await scheduling.toSchedule(
+          {...schedulingDTO, data: '2021-08-14'}
+        )
       })
     })
+  })
+
+  describe('getSchedule', ()=>{
+    const query : QueryDTO = {
+      data : '2021-08-12',
+      idServico: '1',
+      idConsultor: '1'
+    }
+
+    describe('Error: query', ()=>{
+      test('Ao menos um parâmetro é necessário.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.getSchedule({})
+        }catch (err){
+          expect(err.message).toBe('Ao menos um parâmetro é necessário.')
+        }
+      })
+      test('Data inválida.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.getSchedule({data: '2021-08-35'})
+        }catch (err){
+          expect(err.message).toBe('Data inválida.')
+        }
+      })
+      test('idConsultor precisa ser um número.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.getSchedule({idConsultor:'a'})
+        }catch (err){
+          expect(err.message).toBe('idConsultor precisa ser um número.')
+        }
+      })
+      test('idServico precisa ser um número.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.getSchedule({idServico:'a'})
+        }catch (err){
+          expect(err.message).toBe('idServico precisa ser um número.')
+        }
+      })
+    });
+
+    describe('Error: Não a agendamentos disponíveis para os' +
+      ' parâmetros informados.', ()=>{
+      test('Não a agendamentos disponíveis para os' +
+      ' parâmetros informados.', async ()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.getSchedule({idConsultor: '0'})
+        }catch (err){
+          expect(err.message).toBe('Não a agendamentos disponíveis para os' +
+          ' parâmetros informados.')
+        }
+      })
+    });
+
+    describe('Successful', ()=>{
+      test('Successful', async()=>{
+        const res = await scheduling.getSchedule(query)
+          expect(res).toEqual([
+            {id:1, data:'2021-08-12', idConsultor:1, idServico:1, emailCliente: 'sam@gmail.com'},
+            {id:2, data:'2021-08-12', idConsultor:2, idServico:2, emailCliente: 'sam@gmail.com'}
+          ])
+      })
+    })
+
   })
 
 });

@@ -76,7 +76,7 @@ export class SchedulingBusiness {
       const query : QueryDB = {}
 
       if(dto.data){
-        if(validateDate(dto.data)){
+        if(!validateDate(dto.data)){
           throw new CustomError(400, 'Data inválida.')
         }
         query.data = new Date(dto.data)
