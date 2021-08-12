@@ -1,8 +1,8 @@
 export class ServiceConsultantMock{
   public selectGeneric  = async(aliases : string[] | string, where={
-    idConsultor: 0
+    id_consultor: 0
   }) => {
-    if(where.idConsultor)return []
+    if(where.id_consultor===0)return []
     return ['1','2']
   }
 }

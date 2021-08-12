@@ -25,10 +25,11 @@ export class SchedulingBusiness {
 
   toSchedule = async(dto : SchedulingDTO)=>{
     try {
-      if(!dto  || !dto.data || !dto.idServico || !dto.idConsultor || !dto.emailCliente){
+      if(!dto  || !dto.data || dto.idServico===undefined || dto.idConsultor===undefined || !dto.emailCliente){
         throw new CustomError(400, 'Há entradas ausentes.')
       }
-      if(isNaN(dto.idConsultor) || isNaN(dto.idServico) ||
+      if(dto.idConsultor==='' || dto.idServico==='' ||
+        isNaN(Number(dto.idConsultor)) || isNaN(dto.idServico) ||
         !validateDate(dto.data) || !validateEmail(dto.emailCliente)){
         throw new CustomError(400, 'Há entradas fora do padrão.')
       }

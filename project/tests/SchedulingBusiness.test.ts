@@ -13,7 +13,7 @@ describe('Scheduling Business', ()=>{
 
   describe('toSchedule', ()=>{
     const schedulingDTO : SchedulingDTO = {
-      data : '2021-08-12',
+      data : new Date(),
       emailCliente: 'sam@gmail.com',
       idConsultor: 1,
       idServico: 1
@@ -44,7 +44,7 @@ describe('Scheduling Business', ()=>{
         expect.assertions(1)
         try {
           await scheduling.toSchedule(
-            {...schedulingDTO, idConsultor: ''}
+            {...schedulingDTO, idConsultor: undefined}
           )
         }catch (err){
           expect(err.message).toBe('Há entradas ausentes.')
@@ -54,7 +54,7 @@ describe('Scheduling Business', ()=>{
         expect.assertions(1)
         try {
           await scheduling.toSchedule(
-            {...schedulingDTO, idServico : ''}
+            {...schedulingDTO, idServico : undefined}
           )
         }catch (err){
           expect(err.message).toBe('Há entradas ausentes.')
@@ -87,7 +87,7 @@ describe('Scheduling Business', ()=>{
         expect.assertions(1)
         try {
           await scheduling.toSchedule(
-            {...schedulingDTO, idServico : 'a'}
+            {...schedulingDTO, idServico : ''}
           )
         }catch (err){
           expect(err.message).toBe('Há entradas fora do padrão.')
@@ -97,7 +97,7 @@ describe('Scheduling Business', ()=>{
         expect.assertions(1)
         try {
           await scheduling.toSchedule(
-            {...schedulingDTO, idConsultor: 'a'}
+            {...schedulingDTO, idConsultor: ''}
           )
         }catch (err){
           expect(err.message).toBe('Há entradas fora do padrão.')
@@ -114,6 +114,56 @@ describe('Scheduling Business', ()=>{
           )
         }catch (err){
           expect(err.message).toBe('Não há um serviço deste associado a este consultor.')
+        }
+      })
+    })
+
+    describe('Error: data', ()=>{
+      test('Data não pode ser um feriado.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.toSchedule(
+            {...schedulingDTO, data: '2021-08-11'}
+          )
+        }catch (err){
+          expect(err.message).toBe('Data não pode ser um feriado.')
+        }
+      })
+      test('Erro ao verificar se a data é feriado ou não,' +
+        ' por favor tente novamente mais tarde.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.toSchedule(
+            {...schedulingDTO}
+          )
+        }catch (err){
+          expect(err.message).toBe('Erro ao verificar se a data é feriado ou não,' +
+            ' por favor tente novamente mais tarde.')
+        }
+      })
+      test('Erro ao verificar se a data é feriado ou não,' +
+        ' por favor tente novamente mais tarde.', async()=>{
+        expect.assertions(1)
+        try {
+          await scheduling.toSchedule(
+            {...schedulingDTO}
+          )
+        }catch (err){
+          expect(err.message).toBe('Erro ao verificar se a data é feriado ou não,' +
+            ' por favor tente novamente mais tarde.')
+        }
+      })
+    })
+
+    describe('Sucessfull', ()=>{
+      test('Sucessfull', async()=>{
+        expect.assertions(0)
+        try {
+          await scheduling.toSchedule(
+            {...schedulingDTO, data: '2021-08-14'}
+          )
+        }catch (err){
+          expect(err).toBe('')
         }
       })
     })
