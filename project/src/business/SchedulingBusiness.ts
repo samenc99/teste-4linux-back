@@ -1,29 +1,29 @@
 import Database from "../data/Database";
-import {AgendamentoDTO, DTOtoInputDB} from "../model/Agendamento";
+import {SchedulingDTO, DTOtoInputDB} from "../model/Scheduling";
 import {CustomError} from "../errors/CustomError";
 import validateDate from "../services/validateDate";
 import validateEmail from "../services/validateEmail";
 import api from "../services/api";
 
-type AgendamentoMock = {
+type SchedulingMock = {
   database : any,
   dbServiceConsultant: any,
   holiday : any
 }
 
-export class AgendamentoBusiness {
+export class SchedulingBusiness {
   private database : any
-  private dbServicoConsultor : any
+  private dbServiceConsultor : any
   private holiday : any
 
-  constructor(mock?:AgendamentoMock) {
+  constructor(mock?:SchedulingMock) {
     this.database = mock?.database || new Database('agendamento')
-    this.dbServicoConsultor = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
+    this.dbServiceConsultor = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
     this.holiday = mock?.holiday || this.verifyHoliday
   }
 
 
-  toSchedule = async(dto : AgendamentoDTO)=>{
+  toSchedule = async(dto : SchedulingDTO)=>{
     try {
       if(!dto  || !dto.data || !dto.idServico || !dto.idConsultor || !dto.emailCliente){
         throw new CustomError(400, 'Há entradas ausentes.')

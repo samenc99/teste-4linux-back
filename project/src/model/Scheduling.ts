@@ -1,18 +1,18 @@
-export type AgendamentoDTO = {
+export type SchedulingDTO = {
   data : any,
   idConsultor  : any,
   idServico : any,
   emailCliente : any
 }
 
-export type AgendamentoInputDB = {
+export type SchedulingInputDB = {
   data : Date,
   id_consultor : number,
   id_servico : number,
   email_cliente : string
 }
 
-export type AgendamentoDB = {
+export type SchedulingDB = {
   id : number,
   data : Date
   id_consultor : number,
@@ -20,7 +20,7 @@ export type AgendamentoDB = {
   email_cliente : string
 }
 
-export type AgendamentoOutput  = {
+export type SchedulingOutput  = {
   id : number,
   data : Date,
   idConsultor : number,
@@ -28,7 +28,7 @@ export type AgendamentoOutput  = {
   emailCliente : string
 }
 
-export const DTOtoInputDB = (dto : AgendamentoDTO) : AgendamentoInputDB=>{
+export const DTOtoInputDB = (dto : SchedulingDTO) : SchedulingInputDB=>{
   return {
     email_cliente : dto.emailCliente,
     data : dto.data,
@@ -37,7 +37,7 @@ export const DTOtoInputDB = (dto : AgendamentoDTO) : AgendamentoInputDB=>{
   }
 }
 
-export const DBtoOutput = (db : AgendamentoDB) : AgendamentoOutput =>{
+export const DBtoOutput = (db : SchedulingDB) : SchedulingOutput =>{
   return {
     emailCliente : db.email_cliente,
     data : db.data,
