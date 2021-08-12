@@ -2,7 +2,7 @@ import {SchedulingBusiness} from "../business/SchedulingBusiness";
 import {Request, Response} from "express";
 
 export class SchedullingController{
-  public schedullingBusiness = new SchedulingBusiness()
+  private schedullingBusiness = new SchedulingBusiness()
 
   toSchedule = async (req: Request, res: Response): Promise<void> => {
     try {
