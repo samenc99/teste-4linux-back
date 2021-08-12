@@ -46,3 +46,15 @@ export const DBtoOutput = (db : SchedulingDB) : SchedulingOutput =>{
     idServico : db.id_servico
   }
 }
+
+export type QueryDTO = {
+  data ?: string,
+  idServico ?: string,
+  idConsultor ?: string
+}
+
+export type QueryDB = {
+  data ?: Date,
+  id_servico ?: number,
+  id_consultor? : number
+}

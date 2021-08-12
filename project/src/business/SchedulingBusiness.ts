@@ -1,5 +1,5 @@
 import Database from "../data/Database";
-import {SchedulingDTO, DTOtoInputDB} from "../model/Scheduling";
+import {DTOtoInputDB, QueryDB, QueryDTO, SchedulingDB, SchedulingDTO, SchedulingOutput} from "../model/Scheduling";
 import {CustomError} from "../errors/CustomError";
 import validateDate from "../services/validateDate";
 import validateEmail from "../services/validateEmail";
@@ -12,14 +12,19 @@ type SchedulingMock = {
 }
 
 export class SchedulingBusiness {
-  private database : any
-  private dbServiceConsultant : any
-  private verifyHoliday : any
+  private database = new Database('agendamento')
+  private dbServiceConsultant = new Database('rel_servico_consultor')
+  private readonly verifyHoliday : any
 
   constructor(mock?:SchedulingMock) {
-    this.database = mock?.database || new Database('agendamento')
-    this.dbServiceConsultant = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
-    this.verifyHoliday = mock?.verifyHoliday || this.holiday
+    if(mock){
+      this.database = mock.database
+      this.dbServiceConsultant = mock.dbServiceConsultant
+      this.verifyHoliday = mock.verifyHoliday
+    }
+    else{
+      this.verifyHoliday = this.holiday
+    }
   }
 
 
@@ -59,6 +64,59 @@ export class SchedulingBusiness {
       throw new CustomError(
         err.statusCode || 500,
         err.message || 'Erro interno, por favor tente novamente mais tarde.')
+    }
+  }
+
+  getSchedule = async(dto : QueryDTO):Promise<SchedulingOutput[]>=>{
+    try {
+      if(!dto || (!dto.data && !dto.idServico && !dto.idConsultor)){
+        throw new CustomError(400, 'Ao menos um parâmetro é necessário.')
+      }
+
+      const query : QueryDB = {}
+
+      if(dto.data){
+        if(validateDate(dto.data)){
+          throw new CustomError(400, 'Data inválida.')
+        }
+        query.data = new Date(dto.data)
+      }
+      if(dto.idConsultor){
+        if(isNaN(Number(dto.idConsultor))){
+          throw new CustomError(400, 'idConsultor precisa ser um número.')
+        }
+        query.id_consultor = Number(dto.idConsultor)
+      }
+      if(dto.idServico){
+        if(isNaN(Number(dto.idServico))){
+          throw new CustomError(400, 'idServico precisa ser um número.')
+        }
+        query.id_servico = Number(dto.idServico)
+      }
+
+      const schedulings : SchedulingDB[] = await this.database.selectGeneric(
+        ['id', 'data', 'id_consultor', 'id_servico', 'email_cliente'],
+        query
+      )
+      if(schedulings.length===0){
+        throw new CustomError(404, 'Não a agendamentos disponíveis para os ' +
+          'parâmetros informados.')
+      }
+
+      return schedulings.map((scheduling) => {
+        return {
+          id: scheduling.id,
+          idConsultor: scheduling.id_consultor,
+          idServico: scheduling.id_servico,
+          data: scheduling.data,
+          emailCliente: scheduling.email_cliente
+        }
+      })
+    }catch (err){
+      throw new CustomError(
+        err.statusCode || 500,
+        err.message || 'Erro interno, por favor tente novamente mais tarde.'
+      )
     }
   }
 
