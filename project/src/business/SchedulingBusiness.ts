@@ -8,18 +8,18 @@ import api from "../services/api";
 type SchedulingMock = {
   database : any,
   dbServiceConsultant: any,
-  holiday : any
+  verifyHoliday : any
 }
 
 export class SchedulingBusiness {
   private database : any
   private dbServiceConsultant : any
-  private holiday : any
+  private verifyHoliday : any
 
   constructor(mock?:SchedulingMock) {
     this.database = mock?.database || new Database('agendamento')
     this.dbServiceConsultant = mock?.dbServiceConsultant || new Database('rel_servico_consultor')
-    this.holiday = mock?.holiday || this.verifyHoliday
+    this.verifyHoliday = mock?.verifyHoliday || this.holiday
   }
 
 
@@ -61,7 +61,7 @@ export class SchedulingBusiness {
     }
   }
 
-  private verifyHoliday = async(date : Date):Promise<number>=>{
+  private holiday = async(date : Date):Promise<number>=>{
     try{
       const res = await api.get(`/${date.getFullYear().toString()}`)
       for(const obj of res.data){
