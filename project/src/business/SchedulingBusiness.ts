@@ -79,7 +79,7 @@ export class SchedulingBusiness {
         if(!validateDate(dto.data)){
           throw new CustomError(400, 'Data inválida.')
         }
-        query.data = new Date(dto.data)
+        query.data = dto.data
       }
       if(dto.idConsultor){
         if(isNaN(Number(dto.idConsultor))){

@@ -54,7 +54,7 @@ export type QueryDTO = {
 }
 
 export type QueryDB = {
-  data ?: Date,
+  data ?: string,
   id_servico ?: number,
   id_consultor? : number
 }
