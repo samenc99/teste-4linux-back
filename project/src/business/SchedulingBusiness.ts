@@ -14,6 +14,7 @@ type SchedulingMock = {
 export class SchedulingBusiness {
   private database = new Database('agendamento')
   private dbServiceConsultant = new Database('rel_servico_consultor')
+  private dbService = new Database('servicos')
   private readonly verifyHoliday : any
 
   constructor(mock?:SchedulingMock) {
@@ -95,11 +96,11 @@ export class SchedulingBusiness {
       }
 
       const schedulings : SchedulingDB[] = await this.database.selectGeneric(
-        ['id', 'data', 'id_consultor', 'id_servico', 'email_cliente'],
+        ['agendamento.id as id', 'data', 'id_consultor', 'id_servico', 'email_cliente', 'descricao'],
         query
-      )
+      ).join('servicos', 'agendamento.id_servico', 'servicos.id')
       if(schedulings.length===0){
-        throw new CustomError(404, 'Não a agendamentos disponíveis para os ' +
+        throw new CustomError(404, 'Não há agendamentos disponíveis para os ' +
           'parâmetros informados.')
       }
 
@@ -109,7 +110,8 @@ export class SchedulingBusiness {
           idConsultor: scheduling.id_consultor,
           idServico: scheduling.id_servico,
           data: scheduling.data,
-          emailCliente: scheduling.email_cliente
+          emailCliente: scheduling.email_cliente,
+          descricao : scheduling.descricao
         }
       })
     }catch (err){

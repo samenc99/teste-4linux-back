@@ -17,7 +17,8 @@ export type SchedulingDB = {
   data : Date
   id_consultor : number,
   id_servico : number,
-  email_cliente : string
+  email_cliente : string,
+  descricao : string
 }
 
 export type SchedulingOutput  = {
@@ -25,7 +26,8 @@ export type SchedulingOutput  = {
   data : Date,
   idConsultor : number,
   idServico : number,
-  emailCliente : string
+  emailCliente : string,
+  descricao: string
 }
 
 export const DTOtoInputDB = (dto : SchedulingDTO) : SchedulingInputDB=>{
@@ -43,7 +45,8 @@ export const DBtoOutput = (db : SchedulingDB) : SchedulingOutput =>{
     data : db.data,
     id : db.id,
     idConsultor : db.id_consultor,
-    idServico : db.id_servico
+    idServico : db.id_servico,
+    descricao : db.descricao
   }
 }
 
