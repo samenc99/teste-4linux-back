@@ -15,6 +15,7 @@ export class SchedullingController{
 
   getSchedule = async (req: Request, res: Response): Promise<any> => {
     try {
+      console.log({password: process.env.DB_PASSWORD})
       const schedules = await this.schedullingBusiness.getSchedule(req.query)
       res.status(200).send({schedules})
     } catch (err) {
