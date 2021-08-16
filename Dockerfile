@@ -5,6 +5,7 @@ WORKDIR /project
 COPY /project/package.json .
 
 RUN npm install
+RUN npm install -g typescript
 
 COPY /project ./project
 
